@@ -1,0 +1,39 @@
+GET http://localhost:5000/users/
+Authorization: Bearer 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjQsIm5hbWUiOiJEd2kgUHV0ZXJhIDIiLCJlbWFpbCI6Im15bmFtZUBnbWFpbDIuY29tIiwiaWF0IjoxNjk1MzcwMzM1LCJleHAiOjE2OTUzNzAzOTV9.ecPnOGqGmH7oRCWjJX83SW0tffZb0Lg315w6e3heeZI
+
+
+### register
+POST http://localhost:5000/register
+Content-Type: application/json
+
+{
+
+"name": "Dwi Putera 3",
+"email": "myname@gmail3.com",
+"password": "123",
+"confirmpassword": "123"
+
+
+
+}
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+
+
+"email": "myname@gmail2.com",
+"password": "123"
+
+
+
+
+}
+
+
+
+###
+GET http://localhost:5000/users/token
