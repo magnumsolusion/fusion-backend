@@ -22,7 +22,75 @@ export const getUsers = async (req, res, next) => {
 
 }
 
+export const getUsersById = async(req, res) =>{
+  try {
+      const response = await Users.findOne({
+          where:{
+              id: req.params.id
+          }
+      });
+      
+      res.status(200).json(response);
+  } catch (error) {
+      console.log(error.message);
+  }
+}
 
+export const updateUsersById = async(req, res) =>{
+  const { name, email, division_id,roles_id } = req.body;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Invalid email format. Please provide a valid email address.' });
+  }
+
+// Check password and confirmation match
+  //if (password !== confirmpassword) {
+  //  return res.status(400).json({ message: 'Invalid password with confirmation' });
+ // }
+
+  try {
+     // const salt = await bcrypt.genSalt();
+     // const hashPassword = await bcrypt.hash(password, salt);
+      await Users.update({
+        name: name,
+        email: email,
+        //password: hashPassword,
+        division_id : division_id,
+        roles_id:roles_id
+      },{
+          where:{
+              id: req.params.id
+          }
+      });
+      res.status(200).json({msg: "Data Updated"});
+  } catch (error) {
+      console.log(error.message);
+  }
+}
+
+
+export const deleteUsersById = async (req, res, next) => {
+  const recordId = req.params.id;
+
+  try {
+    // Find the project by ID
+    const Record = await Users.findByPk(recordId);
+
+    // Check if the project exists
+    if (!Record) {
+      return res.status(404).json({ message: 'Data not found' });
+    }
+
+    // Delete the project
+    await Record.destroy();
+
+    res.json({ message: 'Data deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 export const Register = async (req, res, next) => {
   const { name, email, password, confirmpassword } = req.body;

@@ -1,24 +1,132 @@
 import Vendor from '../models/vendor.model.js';
+import db from "../config/Database.js";
 
-
-export const getVendor= async (req, res, next) => {
+export const getVendor = async (req, res, next) => {
 
     try {
+      const filter = req.query.filterModel;
+      var query = `select * from vendor where 1=1 `;
+      
+      //Filter
+      if(filter != null){
+        //quick filter
+         if(req.query.filterModel.quickFilterValues != null && req.query.filterModel.quickFilterValues != ''){
+            query += ` and  vendor_name like '%${req.query.filterModel.quickFilterValues[0]}%' or address like '%${req.query.filterModel.quickFilterValues[0]}%' or contact like '%${req.query.filterModel.quickFilterValues[0]}%' or email like '%${req.query.filterModel.quickFilterValues[0]}%' or notes like '%${req.query.filterModel.quickFilterValues[0]}%' or phone like '%${req.query.filterModel.quickFilterValues[0]}%'`;
+         }
 
-        const vendor = await Vendor.findAll({
+         //header filter
+         if(req.query.filterModel.items != null){
+          if(req.query.filterModel.items[0].field!= "rowNumber"){
+            var search = req.query.filterModel.items[0].value;
+            if(search === undefined){
+              search = '';
+            }
+            switch(req.query.filterModel.items[0].operator) {
+              case "contains":
+                query += ` and ${req.query.filterModel.items[0].field} like '%${search}%' `;
+                break;
+              case "equals":
+                query += ` and ${req.query.filterModel.items[0].field} = '${search}' `;
+                break;
+             case "startsWith":
+              query += ` and ${req.query.filterModel.items[0].field} like '${search}%' `;
+                break;  
+             case "endsWith":
+              query += ` and ${req.query.filterModel.items[0].field} like '%${search}' `;
+                break; 
+              default:
+                // code block
+            }
+           
+          }
+         }
+       }
+        
+       //Sorting
+       if(req.query.sortModel != null && req.query.sortModel != ''){
+         if(req.query.sortModel[0].field != null && req.query.sortModel[0].field != ''){
+          query += ` order by ${req.query.sortModel[0].field} ${req.query.sortModel[0].sort}`;
+         }
+       }
+       
+
+      //Paging
+      query += ` limit ${req.query.pageSize} OFFSET ${req.query.pageSize * req.query.page}`;
+
+      const results = await db.query(query, {
+        type: db.QueryTypes.SELECT,
+      });
+  
+
+        // const vendor = await Vendor.findAll({
 
           
-            order: [['id', 'DESC']]
+        //     order: [['id', 'DESC']]
 
-        });
-      
-        res.json(vendor);
+        // }) 
+        //console.log(results)
+        res.json(results);
         
     } catch (error) {
 
         console.error(error);
         
     }
+
+}
+
+export const getVendorCount= async (req, res, next) => {
+
+  try {
+    const filter = req.query.filterModel;
+    var query = `select count(*) as count from vendor where 1=1 `;
+
+    
+    if(filter != null){
+      if(req.query.filterModel.quickFilterValues != null  && req.query.filterModel.quickFilterValues != ''){
+        query += ` and  vendor_name like '%${req.query.filterModel.quickFilterValues[0]}%' or address like '%${req.query.filterModel.quickFilterValues[0]}%' or contact like '%${req.query.filterModel.quickFilterValues[0]}%' or email like '%${req.query.filterModel.quickFilterValues[0]}%' or notes like '%${req.query.filterModel.quickFilterValues[0]}%' or phone like '%${req.query.filterModel.quickFilterValues[0]}%'`;
+      }
+
+      if(req.query.filterModel.items != null){
+        if(req.query.filterModel.items[0].field!= "rowNumber"){
+          var search = req.query.filterModel.items[0].value;
+          if(search === undefined){
+            search = '';
+          }
+          switch(req.query.filterModel.items[0].operator) {
+            case "contains":
+              query += ` and ${req.query.filterModel.items[0].field} like '%${search}%' `;
+              break;
+            case "equals":
+              query += ` and ${req.query.filterModel.items[0].field} = '${search}' `;
+              break;
+           case "startsWith":
+            query += ` and ${req.query.filterModel.items[0].field} like '${search}%' `;
+              break;  
+           case "endsWith":
+            query += ` and ${req.query.filterModel.items[0].field} like '%${search}' `;
+              break; 
+            default:
+              // code block
+          }
+         
+        }
+       }
+
+      
+    }
+    
+    const results = await db.query(query, {
+      type: db.QueryTypes.SELECT,
+    });
+ 
+      res.json(results);
+      
+  } catch (error) {
+
+      console.error(error);
+      
+  }
 
 }
 

@@ -27,6 +27,11 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
+import Division from './models/division.model.js';
+import Menu from './models/menu.model.js';
+import Roles from './models/roles.model.js';
+import Rolesaction from './models/rolesaction.model.js';
+import Usersroles from './models/usersroles.model.js';
 
 
 dotenv.config();
@@ -59,6 +64,12 @@ const connectToDatabase = async () => {
     await DirectSelling.sync({ alter: true });
     await DirectSellingProduct.sync({ alter: true });
     await OutgoingType.sync({ alter: true });
+
+    await Roles.sync({ alter: true });
+    await Rolesaction.sync({ alter: true });
+    await Usersroles.sync({ alter: true });
+    await Division.sync({ alter: true });
+    await Menu.sync({ alter: true });
   } catch (error) {
     console.error(error);
   }

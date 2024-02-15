@@ -28,6 +28,16 @@ refresh_token: {
     type:DataTypes.TEXT
     
 },
+division_id: {
+
+    type:DataTypes.INTEGER
+    
+},
+roles_id: {
+
+    type:DataTypes.INTEGER
+    
+},
 
 
 

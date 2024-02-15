@@ -1,8 +1,8 @@
 import express from "express"; 
 import { verifyToken } from "../middleware/verify.middleware.js";
-import { getUsers, Register, Login, Logout } from "../controllers/user.controller.js";
+import { getUsers, Register, Login, Logout, getUsersById, updateUsersById, deleteUsersById } from "../controllers/user.controller.js";
 import { refreshToken } from "../controllers/refreshtoken.controller.js";
-import { getVendor, RegisterVendor, deleteVendorById, updateVendorById, getVendorById } from "../controllers/vendor.controller.js";
+import { getVendor, RegisterVendor, deleteVendorById, updateVendorById, getVendorById, getVendorCount } from "../controllers/vendor.controller.js";
 import { getCustomer, RegisterCustomer, deleteCustomerById, updateCustomerById, getCustomerById } from "../controllers/customer.controller.js";
 import { getCustomerContact, RegisterCustomerContact, deleteCustomerContactById, updateCustomerContactById, getCustomerContactById } from "../controllers/customer-contact.controller.js";
 import { getProductCategory, RegisterProductCategory, deleteProductCategoryById, updateProductCategoryById, getProductCategoryById } from "../controllers/product-category.controller.js";
@@ -22,7 +22,9 @@ import { getDirectBuyingProductByIdSum, RegisterDirectBuyingProductEdit, getDire
 import { getDirectSellingLastId, getDirectSellingStatusById, getDirectSelling, RegisterDirectSelling, deleteDirectSellingById, updateDirectSellingById, getDirectSellingById } from "../controllers/direct-selling.controller.js";
 import { getDirectSellingProductByIdSum, RegisterDirectSellingProductEdit, getDirectSellingProductEdit, getDirectSellingProduct, RegisterDirectSellingProduct, deleteDirectSellingProductById, updateDirectSellingProductById, getDirectSellingProductById } from "../controllers/direct-Selling-product.controller.js";
 import { getOutgoingType, RegisterOutgoingType, deleteOutgoingTypeById, updateOutgoingTypeById, getOutgoingTypeById } from "../controllers/outgoing-type.controller.js";
-
+import { getDivision, RegisterDivision, deleteDivisionById, updateDivisionById, getDivisionById } from "../controllers/division.controller.js";
+import { getRoles, RegisterRoles, deleteRolesById, updateRolesById, getRolesById, getRolesActionByRoleId } from "../controllers/roles.controller.js";
+import { getMenu, RegisterMenu, deleteMenuById, updateMenuById, getMenuById, getParentMenu,getChildMenu, getMenuByRoleId,updateRolesActionId } from "../controllers/menu.controller.js";
 
 
 
@@ -34,6 +36,9 @@ router.post('/register', Register);
 router.post('/login', Login);
 router.get('/token', refreshToken);
 router.delete('/logout', Logout);
+router.get('/getUsers/:id', getUsersById);
+router.patch('/updateUsers/:id', updateUsersById);
+router.delete('/deleteUsers/:id', deleteUsersById);
 
 //for vendor
 router.post('/api/registerVendor', RegisterVendor);
@@ -41,6 +46,7 @@ router.get('/api/getVendor/', getVendor);
 router.get('/api/getVendorById/:id', getVendorById);
 router.delete('/api/deleteVendor/:id', deleteVendorById);
 router.patch('/api/updateVendor/:id', updateVendorById);
+router.get('/api/getVendorCount', getVendorCount);
 
 //for customer
 router.post('/api/registerCustomer', RegisterCustomer);
@@ -214,7 +220,31 @@ router.get('/api/getOutgoingTypeById/:id', getOutgoingTypeById);
 router.delete('/api/deleteOutgoingType/:id', deleteOutgoingTypeById);
 router.patch('/api/updateOutgoingType/:id', updateOutgoingTypeById);
 
+//for Division
+router.post('/api/registerDivision', RegisterDivision);
+router.get('/api/getDivision/', getDivision);
+router.get('/api/getDivisionById/:id', getDivisionById);
+router.delete('/api/deleteDivision/:id', deleteDivisionById);
+router.patch('/api/updateDivision/:id', updateDivisionById);
 
+//for Roles
+router.post('/api/registerRoles', RegisterRoles);
+router.get('/api/getRoles/', getRoles);
+router.get('/api/getRolesById/:id', getRolesById);
+router.delete('/api/deleteRoles/:id', deleteRolesById);
+router.patch('/api/updateRoles/:id', updateRolesById);
+router.get('/api/getRolesActionByRoleId/:id', getRolesActionByRoleId);
+
+//for Menu
+router.post('/api/registerMenu', RegisterMenu);
+router.get('/api/getMenu/', getMenu);
+router.get('/api/getMenuById/:id', getMenuById);
+router.delete('/api/deleteMenu/:id', deleteMenuById);
+router.patch('/api/updateMenu/:id', updateMenuById);
+router.get('/api/getParentMenu/:id', getParentMenu);
+router.get('/api/getChildMenu/:id/:id2', getChildMenu);
+router.get('/api/getMenuByRoleId/:id', getMenuByRoleId);
+router.patch('/api/updateMenuByRoleId/:id', updateRolesActionId);
 
 
 export default router;
